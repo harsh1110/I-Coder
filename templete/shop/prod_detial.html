@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}{{item.name | title}} | I-Coder{% endblock title %}
+{% block body %}
+<section class="prodDetails text-white py-4">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-5">
+                <img src="/{{item.image}}" data-aos="zoom-in" alt="{{item.name}}" width="100%" height="500px">
+                <hr data-aos="fade-up" data-aos-offset="0" style="opacity:0.5;">
+                <div class="text-center">
+                    <a class="btn button my-4 text-center" href="/shop/add/{{item.product_id}}" data-aos="zoom-out"
+                        data-aos-offset="0">Add To Cart</a>
+                </div>
+                <form action="/shop/{{item.product_id}}/review" method="post">
+                    {% csrf_token %}
+                    <div class="row my-4">
+                        <div class="col-12 mb-3" data-aos="zoom-out" data-aos-offset="50">
+                            <div class="form">
+                                <input type="text" class="form-control" id="review" name="review"
+                                    placeholder="Enter Review of {{item.name}}"
+                                    style="background-color: transparent; margin-top: 25px !important; border: 2px solid white;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="rate" style="padding-right: 36%;" data-aos="zoom-out" data-aos-offset="50">
+                            <input type="hidden" id="star1" name="rate" value="0" />
+                            <input type="radio" id="star1" name="rate" value="5" />
+                            <label for="star1" title="Star-5">1 stars</label>
+                            <input type="radio" id="star2" name="rate" value="4" />
+                            <label for="star2" title="Star-4">2 stars</label>
+                            <input type="radio" id="star3" name="rate" value="3" />
+                            <label for="star3" title="Star-3">3 stars</label>
+                            <input type="radio" id="star4" name="rate" value="2" />
+                            <label for="star4" title="Star-2">4 stars</label>
+                            <input type="radio" id="star5" name="rate" value="1" />
+                            <label for="star5" title="Star-1">5 star</label>
+                        </div>
+                    </div>
+                    <div class="row text-center" data-aos="zoom-out" data-aos-offset="50">
+                        <div class="text-center mb-3">
+                            <button type="submit" class="btn button my-4">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-6">
+                <h1 data-aos="fade-right">{{item.name | upper}}</h1>
+                <hr data-aos="fade-up" style="opacity:0.5">
+                <h3 data-aos="fade-left"><b>Rs.{{item.price}} /- </b></h3><span data-aos="fade-left"
+                    class="badge bg-info">{{item.discount}} Off</span>
+                <hr data-aos="fade-up" style="opacity:0.5">
+                <h4 data-aos="fade-right"> Catagory : {{item.catagory | title}}</h4>
+                <hr data-aos="fade-up" style="opacity:0.5">
+                <p data-aos="fade-up">{{item.desc | truncatechars:2000}}</p>
+            </div>
+        </div>
+
+        <hr>
+        <div class="my-3 p-3">
+            <h2 class="text-center text-white my-4" data-aos="zoom-out" data-aos-offset="100">All Reviews</h2>
+            {% for review in feedback %}
+            <div class="row d-flex text-muted pt-3 my-4 border-bottom" data-aos="fade-up" data-aos-offset="150">
+                <div class="col-8">
+                    <div class="pb-3 mb-0 small lh-sm w-100">
+                        <div class="d-flex justify-content-between">
+                            <strong class="text-white">{{review.user.first_name | upper}} {{review.user.last_name |upper}}</strong>
+                        </div>
+                        <span class="d-block text-white my-3">{{review.review | title}}</span>
+                    </div>
+                </div>
+                <div class="col-4 text-end">
+                    <div class="rating">
+
+                        <span class="fa fa-star {{review.star1}}"></span>
+                        <span class="fa fa-star {{review.star2}}"></span>
+                        <span class="fa fa-star {{review.star3}}"></span>
+                        <span class="fa fa-star {{review.star4}}"></span>
+                        <span class="fa fa-star {{review.star5}}"></span>
+                        <p class="text-white">{{review.pub_date}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+
+{% endblock body %}

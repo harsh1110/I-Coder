@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Blog | Harsh Gohil{% endblock title %}
+
+
+<!-- section-2-start -->
+{% block body %}
+
+{% load static %}
+<section class="about py-4" id="about">
+    <h2 class="about-heading my-4 text-white text-center" data-aos="zoom-in"><b>Blogs</b></h2>
+
+    <div class="container-sm p-4">
+        {% for item in blog %}
+        <div class="card m-4" data-aos="flip-up" data-aos-offset="200">
+            <div class="card-header">
+                Article By {{item.author | title}}
+            </div>
+            <div class="card-body">
+                <h3 class="card-title"><b>{{item.title}}</b></h3>
+                <h6 class="card-text">{{item.desc | striptags | truncatechars:200}}...</h6>
+                <sub>
+                    {{item.pub_date |timesince}} Ago.
+                </sub>
+                <br>
+                <br>
+                <a href="/{{item.blog_id}}/" class="btn button">Read More &raquo;</a>
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+    </div>
+</section>
+<!-- section-2-end -->
+{% endblock body %}
+
+
+

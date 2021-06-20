@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Your Orders | I-Coder{% endblock title %}
+
+{% block body %}
+
+<section class="order">
+    <div class="container py-4">
+    <h1 class="text-center text-white mb-4"> Your Orders </h1>
+        <div class="card py-4">
+            <div class="card-body">
+            {% if orders.count == 0 %}
+            <h3 class="text-center my-4"> You Have No Orders Previously, Place Order and Try Again..!</h3>
+            {% endif %}
+            {% if orders.count > 0 %}
+                <h3 class="card-title text-center">Your Orders</h3>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col"><h4>#</h4></th>
+                        <th scope="col"><h4>Order Id</h4></th>
+                        <th scope="col"><h4>Products List</h4></th>
+                        <th scope="col"><h4>Total Cart Price</h4></th>
+                        <th scope="col"><h4>Track Your Order</h4></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                      <tr>
+                        <th scope="row"><h5>{{forloop.counter}}</h5></th>
+                        <td><h5>{{order.placedOrder_id}}</h5></td>
+                        <td><h5>{{order.order| safe}}</h5></td>
+                        <td><h5>Rs.{{order.total}}</h5></td>
+                        <td><h5><a href="/shop/trackorder/{{order.placedOrder_id}}" class="btn button">Track Order</a></h5></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}{{item.title | capfirst | truncatechars:50 }} | Harsh Gohil{% endblock title %}
+
+
+<!-- section-2-start -->
+{% block body %}
+
+{% load static %}
+<section class="about py-4 text-white" id="about">
+    <h2 class="about-heading m-4 text-center" data-aos="zoom-in"><b>{{item.title | capfirst}}</b></h2>
+    <div class="container">
+        <div class="row">
+            <img src="/{{item.poster}}" height="500px" data-aos="zoom-out"></img>
+        </div>
+        <div class="my-4" data-aos="fade-up">{{item.desc | safe }}</div>
+        <div class="text-end my-4">
+            <h5 class="my-4" data-aos="fade-right" data-aos-offset="100">Article By {{item.author | upper}}</h5>
+            <h6 class="mb-4" data-aos="fade-left" data-aos-offset="50">{{item.pub_date}}</h6>
+        </div>
+    </div>
+
+</section>
+<!-- section-2-end -->
+{% endblock body %}

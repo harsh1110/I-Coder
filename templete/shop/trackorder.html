@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Order Status | I-Coder{% endblock title %}
+
+{% block body %}
+
+<section class="track pt-4">
+    <div class="text-center text-white mt-4">
+        <h1 class="mt-4">Your Order Status</h1>
+    </div>
+    <div class="container px-4 mx-auto">
+        <div class="card">
+            <div class="row d-flex justify-content-between px-3 top">
+                <div class="d-flex">
+                    <h5>ORDER <span class="text-danger font-weight-bold">#{{status.order_id}}</span></h5>
+                </div>
+                <div class="d-flex flex-column text-sm-right">
+                    <p>Expected Arrival : <span>{{status.estimatedDate}}</span></p>
+                    <p>Facility No. <span class="font-weight-bold"> {{status.facilityNo}}</span></p>
+                    <p class="mb-4">Comment :- <span class="font-weight-bold"> {{status.comment}}</span></p>
+                </div>
+            </div> <!-- Add class 'active' to progress -->
+            <div class="hello row d-flex justify-content-center">
+                <div class="col-12">
+                    <div class="container">
+                        <ol class="progtrckr mx-4" data-progtrckr-steps="4">
+                            <li class="progtrckr-{{status.process}}">Order Confirm</li>
+                            <li class="progtrckr-{{status.shipped}}">Shipped</li>
+                            <li class="progtrckr-{{status.inRoute}}">On The Way</li>
+                            <li class="progtrckr-{{status.arrived}}">Delivered</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

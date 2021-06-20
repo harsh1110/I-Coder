@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Shop | I-Coder{% endblock title %}
+
+{% block body %}
+{% load static %}
+<section class="shop">
+    <div class="container text-center py-4">
+        <h1 class="text-white" data-aos="fade-right" style="font-family: 'Architects Daughter', cursive; font-size: 50px;">Welcome To I-Coder Shop</h1>
+    </div>
+
+
+    <div class="container text-center py-4">
+        <div class="text-white">
+            <h1 style="font-family: 'Dancing Script', cursive;" data-aos="zoom-in">Holiday Sale</h1>
+            <h3 style="font-family: 'Dancing Script', cursive;" data-aos="zoom-in">Huge Saving upto 35% Discount</h3>
+        </div>
+        <div class="row">
+            {% for product in item %}
+            <div class="col-6">
+                <div class="card m-3" data-aos="fade-down" style="max-width: 700px; margin-top: 50px !important;">
+                    <div class="row g-0">
+                        <div class="col-md-5 p-3">
+                            <img src="/{{product.image}}" alt="{{product.name}}" height="100%" width="100%">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <h3 class="card-title">{{product.name | capfirst}}</h3>
+                                <p class="card-text">{{product.desc | truncatechars:100}}</p>
+                                <sub>Catagory : {{product.catagory | title}}</sub>
+                                <h5 class="card-text my-4"><small class="text-dark"><b>Price :
+                                            Rs.{{product.price}} /- <span class="badge bg-info">{{product.discount}}
+                                                Off</span></b></small>
+                                </h5>
+                                <a href="/shop/{{product.product_id}}" class="btn button mx-3">View Product &raquo;</a>
+                                <a href="/shop/add/{{product.product_id}}" class="btn button">Add To Cart &raquo;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:2 and forloop.counter > 0 and not forloop.last %}
+            </div><div class="row">
+            {% endif %}
+            {% endfor %}
+        </div>
+
+    
+
+
+</section>
+{% endblock body %}

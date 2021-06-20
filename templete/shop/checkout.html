@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}Checkout | I-Coder{% endblock title %}
+{% block body%}
+<section class="checkout text-white">
+    <div class="container">
+        <main>
+            <div class="py-5 text-center">
+                <h2 style="font-size: 50px;">Checkout form</h2>
+                <p class="lead my-4">Below is an example form built entirely with Bootstrap’s form controls. Each required
+                    form group has a validation state that can be triggered by attempting to submit the form without
+                    completing it.</p>
+            </div>
+
+            <div class="row g-5">
+                <div class="cart-list col-md-5 col-lg-4 order-md-last">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-white">Your cart</span>
+                        <span class="badge bg-info rounded-pill">{{cart.count}}</span>
+                    </h4>
+                    <hr style="opacity: 1;">
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-white">#</th>
+                                <th scope="col" class="text-white">Product</th>
+                                <th scope="col" class="text-white">Quantity</th>
+                                <th scope="col" class="text-white">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart %}
+                            <tr>
+                                <th scope="row" class="text-white">{{forloop.counter}}</th>
+                                <td class="text-white">{{item.product | title}}</td>
+                                <td class="text-white">{{item.quantity}}</td>
+                                <td class="text-white">{{item.product.price}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <h5>Grand Total : {{bill}}</h5>
+                            </tr>
+                            <hr style="opacity: 1;">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-7 col-lg-8">
+                    <h2 class="mb-3">Billing address</h2>
+                        <hr class="my-4" style="opacity: 1;">
+                    <form class="needs-validation" method="POST" action="/shop/placeOrder">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                        <input type="hidden" name="total" value="{{bill}}">
+                            <div class="col-sm-6">
+                                <label for="firstName" class="form-label">First name</label>
+                                <input type="text" class="form-control" id="firstName" value="{{request.user.first_name}}" required>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="lastName" class="form-label">Last name</label>
+                                <input type="text" class="form-control" id="lastName" value="{{request.user.last_name}}" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="username" class="form-label">Username</label>
+                                <div class="input-group has-validation">
+                                    <input type="text" class="form-control" id="username" value="{{request.user}}"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" value="{{request.user.email}}">
+                            </div>
+
+                            <div class="col-12">
+                                <label for="number" class="form-label">Mobile No.</label>
+                                <input type="number" class="form-control" id="phone" name="phone">
+                            </div>
+
+                            <div class="col-12">
+                                <label for="address" class="form-label">Address 1</label>
+                                <input type="text" class="form-control" id="address" name="address1" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="address2" class="form-label">Address 2</label>
+                                <input type="text" class="form-control" id="address2" name="address2" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label for="zip" class="form-label">Zip</label>
+                                <input type="number" class="form-control" id="zip" name="zipcode" required>
+                            </div>
+                        </div>
+
+
+                        <div class="form-check my-4">
+                            <input type="checkbox" class="form-check-input" id="same-address">
+                            <label class="form-check-label" for="same-address">Shipping address is the same as my
+                                billing address</label>
+                        </div>
+                        <hr class="my-4" style="opacity: 1;">
+                        
+                        <h4 class="mb-3">Payment</h4>
+                        <hr class="my-4" style="opacity: 1;">
+
+                        <div class="row gy-3">
+                            <div class="col-md-6">
+                                <label for="cc-name" class="form-label">Name on card</label>
+                                <input type="text" class="form-control" id="cc-name" placeholder="" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="cc-number" class="form-label">Card Number</label>
+                                <input type="text" class="form-control" id="cc-number" placeholder="" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="cc-expiration" class="form-label">Expiration</label>
+                                <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="cc-cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
+                            </div>
+                        </div>
+
+                        <button class="w-100 btn button btn-lg my-4" type="submit">Continue to checkout</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</section>
+{% endblock body %}

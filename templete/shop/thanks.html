@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Thank You For order With Us | I-Coder{% endblock title %}
+
+
+
+{% block body %}
+
+<section class="thanks p-4">
+    <div class="container py-4">
+
+
+        <div class="p-5 mb-4 bg-light text-center rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Thanks For Shopping with us, {{request.user | upper}}</h1>
+                <p class="fs-4 my-4">Using a series of utilities, you can create this jumbotron, just like the one
+                    in previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it
+                    to your liking.</p>
+                <a href="/shop/" class="btn button-white btn-lg my-4" type="button">Go To Shop &raquo;</a>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+{% endblock body %}

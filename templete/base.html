@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+
+<body>
+    <!-- navbar-start -->
+    <header class="navigation d-flex flex-wrap justify-content-center py-3 px-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4">I - Coder</span>
+        </a>
+
+        <ul class="nav nav-pills">
+
+            {% if user.is_anonymous %}
+            <li class="nav-item">
+                <a class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#signup">
+                    SignUp
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#login">
+                    Login
+                </a>
+            </li>
+            {% endif %}
+            {% if user.is_authenticated %}
+
+            <li class="nav-item"><a href="/" class="nav-link text-white" aria-current="page">Home</a></li>
+            <li class="nav-item"><a href="/blog" class="nav-link text-white">Blog</a></li>
+            <li class="nav-item"><a href="/shop" class="nav-link text-white">Shop</a></li>
+
+            {% if cart.count > 0 %}
+            <li class="nav-item">
+                <a class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#cart">
+                    Cart({{cart.count}})
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+                <div class="dropdown">
+                    <a class="nav-link btn dropdown-toggle text-white" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="text-white">Welcome {{user.username | upper}}</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#">Username : {{user.username | upper}}</a></li>
+                        <li><a class="dropdown-item" href="#">Name : {{user.first_name}} {{user.last_name}}</a></li>
+                        <li><a class="dropdown-item" href="#">Email : {{user.email}}</a></li>
+                        <li><a class="dropdown-item" href="/shop/orders">Your Orders</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+        </ul>
+    </header>
+    <!-- navbae-end -->
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-0" role="alert">
+        <strong>Message :</strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% block body %}{% endblock body %}
+
+    <!-- signup-Modal -->
+    <div class="modal fade" id="signup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="/signup">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h5 class="modal-title" id="exampleModalLabel">Register Yourself Here</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container my-4">
+                            <div class="form-floating my-3">
+                                <input type="text" class="form-control" id="username" name="username" required>
+                                <label for="floatingInput">Username</label>
+                            </div>
+                            <div class="form-floating my-3">
+                                <input type="text" class="form-control" id="fname" name="fname" required>
+                                <label for="floatingInput">First Name</label>
+                            </div>
+                            <div class="form-floating my-3">
+                                <input type="text" class="form-control" id="lname" name="lname" required>
+                                <label for="floatingInput">Last Name</label>
+                            </div>
+                            <div class="form-floating my-3">
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <label for="floatingInput">Email Address</label>
+                            </div>
+                            <div class="form-floating my-3">
+                                <input type="password" class="form-control" id="pass1" name="pass1" required>
+                                <label for="floatingPassword">Password</label>
+                            </div>
+                            <div class="form-floating my-3">
+                                <input type="password" class="form-control" id="pass2" name="pass2" required>
+                                <label for="floatingPassword">Confirm Password</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn button">SignUp</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- login-Modal -->
+    <div class="modal fade" id="login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="/login" method="post">{% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h5 class="modal-title" id="exampleModalLabel">Login With Correct Credentials</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container my-4">
+                            <div class="form-floating my-3">
+                                <input type="text" class="form-control" id="loginusername" name="loginusername"
+                                    required>
+                                <label for="floatingInput">Username</label>
+                            </div>
+                            <div class="form-floating my-3">
+                                <input type="password" class="form-control" id="loginpass1" name="loginpass1" required>
+                                <label for="floatingPassword">Password</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="button btn">Login</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- cart-Modal -->
+    <div class="modal fade" id="cart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title" id="exampleModalLabel">I-Coder Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center text-white">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-white">#</th>
+                                <th scope="col" class="text-white">Product</th>
+                                <th scope="col" class="text-white">Quantity</th>
+                                <th scope="col" class="text-white">Price</th>
+                                <th scope="col" class="text-white"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart %}
+                            <tr>
+                                <th scope="row" class="text-white">{{forloop.counter}}</th>
+                                <td class="text-white">{{item.product}}</td>
+                                <td class="text-white">{{item.quantity}}</td>
+                                <td class="text-white">{{item.product.price}}</td>
+                                <td><a class="btn btn-sm button" href="/shop/delete/{{item.order_id}}">Remove</a></td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <h5>Grand Total : {{bill}}</h5>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a type="submit" href="/shop/checkout" class="button btn">Checkout</a>
+                    <a type="submit" href="/shop/clear" class="button btn">Clear Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            offset: 210,
+            duration: 1500,
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+
+</body>
+
+
+<style>
+    * {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    header.navigation {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+        padding-right: 50px !important;
+        padding-left: 100px !important;
+    }
+
+    .navigation .nav-pills .nav-link {
+        border-radius: 0px;
+        border-bottom: 2px solid transparent;
+        transition: 0.5s all ease-in;
+        cursor: pointer;
+
+    }
+
+    .navigation .nav-pills .nav-link:hover {
+        border-bottom: 2px solid rgb(255, 255, 255);
+        transition: 0.5s all ease-in;
+
+
+    }
+
+    .navigation .nav-pills .nav-item {
+        padding-left: 10px;
+        padding-right: 10px;
+
+    }
+
+    .navigation .nav-pills .nav-item .dropdown .dropdown-item {
+        font-weight: 900;
+        border-bottom: 2px solid transparent;
+        transition: 0.5s all linear;
+    }
+
+    .navigation .nav-pills .nav-item .dropdown .dropdown-item:hover {
+        border-color: black;
+        background-color: transparent;
+        transition: 0.5s all linear;
+    }
+
+    .about {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+
+    }
+
+    .about-heading {
+        font-size: 40px;
+        font-weight: 900;
+    }
+
+    .card .card-body .button {
+        background-color: black !important;
+        color: white;
+        border: 2px solid black;
+        transition: 0.5s all ease-in;
+    }
+
+    .button {
+        background-color: black !important;
+        color: white;
+        border: 2px solid transparent;
+        transition: 0.5s all ease-in;
+    }
+    .button-white {
+        background-color: black !important;
+        color: white;
+        border: 2px solid transparent;
+        transition: 0.5s all ease-in;
+    }
+
+    .card .card-body .button:hover {
+        background-color: white !important;
+        color: black;
+        transition: 0.5s all ease-in;
+    }
+
+    .button:hover {
+        background-color: transparent !important;
+        color: white;
+        border-color: white;
+        transition: 0.5s all ease-in;
+    }
+    .button-white:hover {
+        background-color: transparent !important;
+        color: black;
+        border-color: black;
+        transition: 0.5s all ease-in;
+    }
+
+    .modal-footer .button {
+        background-color: black !important;
+        color: white;
+        border: 2px solid transparent;
+        transition: 0.5s all ease-in;
+    }
+
+    .modal-footer .button:hover {
+        background-color: transparent !important;
+        color: white;
+        border-color: white;
+        transition: 0.5s all ease-in;
+    }
+
+    .modal-content {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+    }
+
+    .modal-content input {
+        background: transparent !important;
+        color: white !important;
+        border-radius: 50px !important;
+        border: 3px solid white !important;
+    }
+
+    .modal-content label {
+        color: white !important;
+    }
+
+    .modal-title {
+        color: white !important;
+        font-size: 25px !important;
+    }
+
+    .base {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+    }
+
+    .shop {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+    }
+
+    .order {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+        padding-top: 100px !important;
+        padding-bottom: 300px !important;
+    }
+
+    .prodDetails {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+    }
+
+    .checkout {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+        padding-bottom: 50px;
+    }
+
+    .checkout .cart-list {
+        background: transparent !important;
+    }
+
+    .checkout input {
+        color: white !important;
+        background-color: transparent;
+        border-radius: 30px;
+        border: 2px solid white;
+    }
+
+    .checkout input:active,
+    .checkout input:focus {
+        background-color: transparent !important;
+    }
+
+    section.track {
+        color: #000;
+        overflow-x: hidden;
+        height: 100%;
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+        background-repeat: no-repeat
+    }
+
+    .track .card {
+        z-index: 0;
+        background-color: #ECEFF1;
+        padding-bottom: 20px;
+        margin-top: 90px;
+        margin-bottom: 90px;
+        border-radius: 10px
+    }
+    .track .card .hello{
+        padding-bottom: 100px !important;
+    }
+
+    .track .top {
+        padding-top: 40px;
+        padding-left: 13% !important;
+        padding-right: 13% !important
+    }
+
+    .thanks {
+        background-image: linear-gradient(120deg, orange, red, rgb(235, 18, 206));
+        padding-top: 100px !important;
+        padding-bottom: 110px !important;
+
+    }
+    ol.progtrckr {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+ol.progtrckr li {
+    display: inline-block;
+    text-align: center;
+    line-height: 3.5em;
+}
+
+ol.progtrckr[data-progtrckr-steps="2"] li { width: 49%; }
+ol.progtrckr[data-progtrckr-steps="3"] li { width: 33%; }
+ol.progtrckr[data-progtrckr-steps="4"] li { width: 24%; }
+ol.progtrckr[data-progtrckr-steps="5"] li { width: 19%; }
+ol.progtrckr[data-progtrckr-steps="6"] li { width: 16%; }
+ol.progtrckr[data-progtrckr-steps="7"] li { width: 14%; }
+ol.progtrckr[data-progtrckr-steps="8"] li { width: 12%; }
+ol.progtrckr[data-progtrckr-steps="9"] li { width: 11%; }
+
+ol.progtrckr li.progtrckr-done {
+    color: black;
+    border-bottom: 4px solid yellowgreen;
+}
+ol.progtrckr li.progtrckr-todo {
+    color: silver; 
+    border-bottom: 4px solid silver;
+}
+
+ol.progtrckr li:after {
+    content: "\00a0\00a0";
+}
+ol.progtrckr li:before {
+    position: relative;
+    bottom: -2.5em;
+    float: left;
+    left: 45%;
+    line-height: 1em;
+}
+ol.progtrckr li.progtrckr-done:before {
+    content: "\2713";
+    color: white;
+    background-color: yellowgreen;
+    height: 2.2em;
+    width: 2.2em;
+    line-height: 2.2em;
+    border: none;
+    border-radius: 2.2em;
+}
+ol.progtrckr li.progtrckr-todo:before {
+    content: "\039F";
+    color: silver;
+    background-color: #ECEFF1;
+    font-size: 2.2em;
+    bottom: -1.2em;
+    margin-left: 10px !important;
+}
+
+.checked {
+  color: orange;
+}
+
+
+.rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;    
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;  
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+
+</style>
+
+</html>
